@@ -13,6 +13,7 @@ const CartItem = props => {
                 <Text styles={styles.mainText}>
                     ${props.amount.toFixed(2)}
                 </Text>
+
                 <TouchableOpacity style={styles.deleteButton} onPress={props.onRemove}>
                     <Ionicons
                         size={23}
