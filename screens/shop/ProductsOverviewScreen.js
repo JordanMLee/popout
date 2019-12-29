@@ -1,10 +1,13 @@
 import React from 'react';
-import {FlatList} from 'react-native';
+import {FlatList, View} from 'react-native';
 import {useDispatch, useSelector} from "react-redux";
 import {HeaderButtons, Item} from "react-navigation-header-buttons";
 import CustomHeaderButton from "../../components/UI/HeaderButton";
 import ProductItem from "../../components/shop/ProductItem";
 import * as cartActions from '../../store/actions/cart';
+
+// experimental
+// import withBadge from "../../components/UI/withBadge";
 
 const ProductsOverviewScreen = props => {
 
@@ -36,6 +39,8 @@ const ProductsOverviewScreen = props => {
 };
 
 ProductsOverviewScreen.navigationOptions = props => {
+
+    // const BadgedIcon = withBadge(1);
     return {
         headerTitle: "All Products",
         headerLeft: (
@@ -50,14 +55,33 @@ ProductsOverviewScreen.navigationOptions = props => {
             </HeaderButtons>
         ),
         headerRight: (
-            <HeaderButtons HeaderButtonComponent={CustomHeaderButton} title='Cart'>
-                <Item
-                    title='Cart'
-                    iconName='md-cart'
-                    onPress={() => {
-                        props.navigation.navigate('Cart')
-                    }}/>
-            </HeaderButtons>)
+            <View style={{flex: 1, flexDirection: 'row'}}>
+
+
+                <HeaderButtons HeaderButtonComponent={CustomHeaderButton} title='Cart'>
+                    <Item
+                        title='Cart'
+                        iconName='md-cart'
+                        onPress={() => {
+                            props.navigation.navigate('Cart')
+                        }}/>
+                </HeaderButtons>
+
+                {/*<HeaderButtons HeaderButtonComponent={CustomHeaderButton} title='Cart'>*/}
+                {/*    <Item*/}
+                {/*        title='Cart'*/}
+                {/*        iconName='md-cart'*/}
+                {/*        onPress={() => {*/}
+                {/*            props.navigation.navigate('Cart')*/}
+                {/*        }}/>*/}
+                {/*</HeaderButtons>*/}
+                {/*<BadgedIcon*/}
+                {/*    name={'md-cart'}*/}
+                {/*    // type={"ionicons"}*/}
+
+                {/*/>*/}
+            </View>
+        )
     }
 };
 

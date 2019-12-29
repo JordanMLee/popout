@@ -4,7 +4,8 @@ import {BarCodeScanner} from 'expo-barcode-scanner';
 import {useDispatch, useSelector} from 'react-redux';
 import * as cartActions from '../../store/actions/cart';
 import {Ionicons} from "@expo/vector-icons";
-
+import Colors from "../../constants/Colors";
+import {Header, Icon, Left} from "native-base";
 
 const Scanner = props => {
 
@@ -13,7 +14,6 @@ const Scanner = props => {
 
     const dispatch = useDispatch();
     const products = useSelector(state => state.products.availableProducts);
-
     useEffect(() => {
         (async () => {
             const {status} = await BarCodeScanner.requestPermissionsAsync();
@@ -21,16 +21,15 @@ const Scanner = props => {
         })();
     }, []);
 
-    const handleBarCodeScanned = ({type, data}) => {
+    const handleBarCodeScanned = async ({type, data}) => {
         setScanned(true);
         // recognize item currently spindrift
-
-        let scannedProduct = products.find(prod => prod.id === 'p2');
+        let scannedProduct = await products.find(prod => prod.barcode === data);
 
 
         // add item to cart
         dispatch(cartActions.addToCart(scannedProduct));
-        alert(`Added ${scannedProduct.title} to cart`);
+        await alert(`Added ${scannedProduct.title} to cart\n${data}`);
 
         // alert(`Bar code with type ${type} and data ${data} has been scanned!`);
     };
@@ -43,20 +42,26 @@ const Scanner = props => {
     }
 
     return (
-        <View
-            style={{
-                flex: 1,
-                flexDirection: 'column',
-                justifyContent: 'flex-end',
-            }}>
-            <BarCodeScanner
-                onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
-                style={StyleSheet.absoluteFillObject}
-            />
+        <View style={{flex: 1}}>
+            <Header style={{backgroundColor: Colors.primary}} headerTitle={"Scan Items"}>
+                <Left>
+                    <Icon iconSize={23} color={Colors.accent} name="md-menu" onPress={() => {
+                        props.navigation.openDrawer()
+                    }}/>
+                </Left>
+            </Header>
 
-            {scanned && (
-                <Button title={'Tap to Scan Again'} onPress={() => setScanned(false)}/>
-            )}
+            <View style={styles.container}>
+                <BarCodeScanner
+                    onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
+                    style={StyleSheet.absoluteFillObject}
+                />
+
+                {scanned && (
+                    <Button title={'Tap to Scan Again'} onPress={() => setScanned(false)}/>
+                )}
+            </View>
+
         </View>
     );
 };
@@ -64,14 +69,28 @@ const Scanner = props => {
 Scanner.navigationOptions = props => {
 
     return {
+        headerTitle: 'Scanner',
         drawerIcon: drawerConfig => (
             <Ionicons
                 name='md-barcode'
                 size={23}
                 color={drawerConfig.tintColor}
             />
-        )
+        ),
+        // headerStyle: {
+        //     backgroundColor: Colors.primary
+        // },
+        // headerTintColor: 'white'
     }
 
 };
+
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        flexDirection: 'column',
+        justifyContent: 'flex-end',
+    }
+});
 export default Scanner;

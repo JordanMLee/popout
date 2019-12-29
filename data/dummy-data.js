@@ -7,7 +7,7 @@ const PRODUCTS = [
         'San Pelligrino',
         'https://images.freshop.com/00041508511803/27e8386ac756da15d4d981dc072a8986_medium.png',
         'soft drink',
-        3.00
+        3.00, ''
     ),
     new Product(
         'p2',
@@ -15,7 +15,7 @@ const PRODUCTS = [
         'Spindrift',
         'https://images.freshop.com/00856579002484/2bc11d1bdf592616106fe3c14996eecd_medium.png',
         'flavored water',
-        3.25
+        3.25, ''
     ),
     new Product(
         'p3',
@@ -23,7 +23,7 @@ const PRODUCTS = [
         'Parfait',
         'https://i5.walmartimages.com/asr/680b2042-48c1-4885-a11e-84487eceb554_1.66c02cb164d8d74c8b85b023b3667517.jpeg?odnWidth=450&odnHeight=450&odnBg=ffffff',
         'filtered water',
-        1.00
+        1.00, ''
     ),
     new Product(
         'p4',
@@ -31,7 +31,8 @@ const PRODUCTS = [
         'Kombucha',
         'https://images.freshop.com/00851861006089/78dd40e099acf89af7ba566e7135d52f_medium.png',
         'Kombucha',
-        4.00
+        4.00,
+        ''
     ),
     new Product(
         'p5',
@@ -39,7 +40,8 @@ const PRODUCTS = [
         'Sprite',
         'https://crazy-greek.com/storage/wZmQ8BccYfrhDV8Qrfoaa6f8ELmDLNRDtR4yACNY.jpeg',
         'soft drink',
-        1.00
+        1.00,
+        ''
     ),
     new Product(
         'p6',
@@ -47,7 +49,17 @@ const PRODUCTS = [
         'Soylent',
         'https://images.freshop.com/00858369006191/dce0af824ce1839efbb2a8e4bd25f399_medium.png',
         'meal replacement drink',
-        5.00
+        5.00,
+        ''
+    ),
+    new Product(
+        'p7',
+        'u1',
+        'Baking Soda',
+        'https://images.freshop.com/00033200011408/99aaf162b178dfd21cd6bbe90882d790_medium.png',
+        'sodium bicarbonate for cooking',
+        .50,
+        '0033200011101',
     )
 ];
 export default PRODUCTS;

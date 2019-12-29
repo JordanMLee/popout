@@ -5,6 +5,7 @@ import Colors from "../../constants/Colors";
 import CartItem from "../../components/shop/CartItem";
 import * as cartActions from "../../store/actions/cart";
 import * as ordersActions from "../../store/actions/orders"
+import {Ionicons} from "@expo/vector-icons";
 
 const CartScreen = props => {
     const cartTotalAmount = useSelector(state => state.cart.totalAmount);
@@ -30,7 +31,7 @@ const CartScreen = props => {
             <View style={styles.summary}>
                 <Text style={styles.summaryText}>
                     Total: <Text style={styles.amount}>${cartTotalAmount.toFixed(2)}</Text></Text>
-                <Button title="Order Now" disabled={cartItems.length === 0} onPress={() => {
+                <Button title="Checkout" disabled={cartItems.length === 0} onPress={() => {
                     dispatch(ordersActions.addOrder(cartItems, cartTotalAmount))
                 }}/>
             </View>
@@ -56,7 +57,15 @@ const CartScreen = props => {
 };
 
 CartScreen.navigationOptions = {
-    headerTitle: 'Your Cart'
+    headerTitle: 'Your Cart',
+    drawerIcon: drawerConfig => (
+        <Ionicons
+            name='md-cart'
+            size={23}
+            color={drawerConfig.tintColor}
+        />
+    )
+
 };
 
 

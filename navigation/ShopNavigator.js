@@ -1,6 +1,6 @@
 import {createStackNavigator} from 'react-navigation-stack';
 import {createAppContainer,} from 'react-navigation';
-import {createDrawerNavigator} from 'react-navigation-drawer';
+import {createDrawerNavigator, DrawerItems} from 'react-navigation-drawer';
 import ProductsOverviewScreen from "../screens/shop/ProductsOverviewScreen";
 import Colors from "../constants/Colors";
 
@@ -10,6 +10,19 @@ import OrdersScreen from "../screens/shop/OrdersScreen";
 import {Ionicons} from "@expo/vector-icons";
 import React from 'react';
 import Scanner from "../screens/camera/BarCodeScanner";
+import {Image, SafeAreaView, ScrollView, View} from 'react-native';
+
+
+const CustomDrawerComponent = (props) => (
+    <SafeAreaView style={{flex: 1}}>
+        <View style={{height: 150, backgroundColor: 'white', alignItems: 'center', justifyContent: 'center'}}>
+            <Image source={require('../assets/icon.png')} style={{height: 120, width: 120, borderRadius: 60}}/>
+        </View>
+        <ScrollView>
+            <DrawerItems {...props}/>
+        </ScrollView>
+    </SafeAreaView>);
+
 
 const ProductsNavigator = createStackNavigator({
     ProductsOverview: ProductsOverviewScreen,
@@ -55,14 +68,17 @@ const OrdersNavigator = createStackNavigator({
 });
 
 const ShopNavigator = createDrawerNavigator({
-    Products: ProductsNavigator,
-    Orders: OrdersNavigator,
+
     Scanner: Scanner,
+    Cart: CartScreen,
+    Orders: OrdersNavigator,
+    Products_admin: ProductsNavigator,
     // Camera: CameraPage,
     // TestScreen: TestScreen,
 
 
 }, {
+    contentComponent: CustomDrawerComponent,
     contentOptions: {
         activeTintColor: Colors.primary
     }
