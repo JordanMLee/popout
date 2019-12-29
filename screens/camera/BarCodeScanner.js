@@ -1,76 +1,65 @@
-import * as React from 'react';
+import React, {useEffect, useState} from 'react';
 import {Button, StyleSheet, Text, View} from 'react-native';
-import * as Permissions from 'expo-permissions';
-
 import {BarCodeScanner} from 'expo-barcode-scanner';
+import {useDispatch, useSelector} from 'react-redux';
+import * as cartActions from '../../store/actions/cart';
 import {Ionicons} from "@expo/vector-icons";
 
-// import {useDispatch, useSelector} from "react-redux";
-// import * as cartActions from '../../store/actions/cart';
 
-export default class Scanner extends React.Component {
-    state = {
-        hasCameraPermission: null,
-        scanned: false,
-    };
+const Scanner = props => {
 
-    async componentDidMount() {
-        this.getPermissionsAsync();
-    }
+    const [hasPermission, setHasPermission] = useState(null);
+    const [scanned, setScanned] = useState(false);
 
-    getPermissionsAsync = async () => {
-        const {status} = await Permissions.askAsync(Permissions.CAMERA);
-        this.setState({hasCameraPermission: status === 'granted'});
-    };
+    const dispatch = useDispatch();
+    const products = useSelector(state => state.products.availableProducts);
 
-    // dispatch = useDispatch();
+    useEffect(() => {
+        (async () => {
+            const {status} = await BarCodeScanner.requestPermissionsAsync();
+            setHasPermission(status === 'granted');
+        })();
+    }, []);
 
-    render() {
-        const {hasCameraPermission, scanned} = this.state;
+    const handleBarCodeScanned = ({type, data}) => {
+        setScanned(true);
+        // recognize item currently spindrift
 
-        if (hasCameraPermission === null) {
-            return <Text>Requesting for camera permission</Text>;
-        }
-        if (hasCameraPermission === false) {
-            return <Text>No access to camera</Text>;
-        }
-        return (
-            <View
-                style={{
-                    flex: 1,
-                    flexDirection: 'column',
-                    justifyContent: 'flex-end',
-                }}>
-                <BarCodeScanner
-                    onBarCodeScanned={scanned ? undefined : this.handleBarCodeScanned}
-                    style={StyleSheet.absoluteFillObject}
-                />
+        let scannedProduct = products.find(prod => prod.id === 'p2');
 
-                {scanned && (
-                    <Button title={'Tap to Scan Again'} onPress={() => this.setState({scanned: false})}/>
-                )}
-            </View>
-        );
-    }
-
-    handleBarCodeScanned = ({type, data}) => {
-
-        this.setState({scanned: true});
-
-        // find corresponding item for noe use second item (spindrift)
-        // eventually replace with data
-        // const scannedItem = useSelector(state => {
-        //     state.products.availableProducts.find(prod => prod.id === 'p2')
-        // });
 
         // add item to cart
-        // this.dispatch(cartActions.addToCart(scannedItem));
-        // alert(`Item ${scannedItem.title} was added to the cart`)
-        alert(`Bar code with type ${type} and data ${data} has been scanned!`);
+        dispatch(cartActions.addToCart(scannedProduct));
+        alert(`Added ${scannedProduct.title} to cart`);
 
-
+        // alert(`Bar code with type ${type} and data ${data} has been scanned!`);
     };
-}
+
+    if (hasPermission === null) {
+        return <Text>Requesting for camera permission</Text>;
+    }
+    if (hasPermission === false) {
+        return <Text>No access to camera</Text>;
+    }
+
+    return (
+        <View
+            style={{
+                flex: 1,
+                flexDirection: 'column',
+                justifyContent: 'flex-end',
+            }}>
+            <BarCodeScanner
+                onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
+                style={StyleSheet.absoluteFillObject}
+            />
+
+            {scanned && (
+                <Button title={'Tap to Scan Again'} onPress={() => setScanned(false)}/>
+            )}
+        </View>
+    );
+};
 
 Scanner.navigationOptions = props => {
 
@@ -85,3 +74,4 @@ Scanner.navigationOptions = props => {
     }
 
 };
+export default Scanner;
