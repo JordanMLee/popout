@@ -9,8 +9,8 @@ import CartScreen from "../screens/shop/CartScreen";
 import OrdersScreen from "../screens/shop/OrdersScreen";
 import {Ionicons} from "@expo/vector-icons";
 import React from 'react';
-import Scanner from "../screens/camera/BarCodeScanner";
 import {Image, SafeAreaView, ScrollView, View} from 'react-native';
+import TestScreen from "../screens/camera/TestScreen";
 
 
 const CustomDrawerComponent = (props) => (
@@ -68,13 +68,12 @@ const OrdersNavigator = createStackNavigator({
 });
 
 const ShopNavigator = createDrawerNavigator({
-
-    Scanner: Scanner,
+    TestScreen: TestScreen,
+    // Scanner: Scanner,
     Cart: CartScreen,
     Orders: OrdersNavigator,
     Products_admin: ProductsNavigator,
     // Camera: CameraPage,
-    // TestScreen: TestScreen,
 
 
 }, {

@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {Button, StyleSheet, Text, View} from 'react-native';
-import {BarCodeScanner} from 'expo-barcode-scanner';
+// import {BarCodeScanner} from 'expo-barcode-scanner';
 import {useDispatch, useSelector} from 'react-redux';
 import * as cartActions from '../../store/actions/cart';
 import {Ionicons} from "@expo/vector-icons";

@@ -1,10 +1,11 @@
 import React from 'react';
 import {StyleSheet} from "react-native";
-import ScannerScreen from "./BarCodeScanner";
+import ItemScanner from "./ItemScanner"
 
 const TestScreen = props => {
+    return <ItemScanner/>
 
-    return <ScannerScreen/>
+    // return <View style={styles.test}><Text>Test Screen</Text></View>
 
 };
 
