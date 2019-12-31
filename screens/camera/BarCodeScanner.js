@@ -22,15 +22,20 @@ const Scanner = props => {
     }, []);
 
     const handleBarCodeScanned = async ({type, data}) => {
-        setScanned(true);
-        // recognize item currently spindrift
-        let scannedProduct = await products.find(prod => prod.barcode === data);
+        try {
 
 
-        // add item to cart
-        dispatch(cartActions.addToCart(scannedProduct));
-        await alert(`Added ${scannedProduct.title} to cart\n${data}`);
+            setScanned(true);
+            // recognize item currently spindrift
+            let scannedProduct = await products.find(prod => prod.barcode === data);
 
+
+            // add item to cart
+            dispatch(cartActions.addToCart(scannedProduct));
+            await alert(`Added ${scannedProduct.title} to cart\n${data}`);
+        } catch (error) {
+            alert(`Unrecognized barcode, please try again`);
+        }
         // alert(`Bar code with type ${type} and data ${data} has been scanned!`);
     };
 
