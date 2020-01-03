@@ -1,5 +1,5 @@
 import React from 'react'
-import {ActivityIndicator, Alert, Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {ActivityIndicator, Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import * as tf from '@tensorflow/tfjs'
 import {fetch} from '@tensorflow/tfjs-react-native'
 import * as mobilenet from '@tensorflow-models/mobilenet'
@@ -9,6 +9,9 @@ import Constants from 'expo-constants'
 import * as Permissions from 'expo-permissions'
 import Colors from "../../constants/Colors";
 import {Header, Icon, Left} from "native-base";
+
+import * as cartActions from '../../store/actions/cart';
+import {connect} from 'react-redux';
 
 class ItemScanner extends React.Component {
     constructor(props) {
@@ -87,12 +90,26 @@ class ItemScanner extends React.Component {
             });
 
             let response = await request.json(); // sends to aws successfully
-            Alert.alert(response.body);
+            // Alert.alert(response.body);
             // console.log(response.body);
-            return response
+            return response.body
         } catch (e) {
             console.log(e)
         }
+    };
+
+    updateCart = async (data) => {
+        try {
+            console.log(this.props.products);
+            console.log("This is the data", data);
+            let scannedProduct = await this.props.products.find(prod => prod.id === 'p' + data);
+            await this.props.addToCart(scannedProduct);
+            await alert(`Added ${scannedProduct.title} to cart`);
+
+        } catch (e) {
+            console.log(e)
+        }
+
     };
 
 
@@ -105,20 +122,20 @@ class ItemScanner extends React.Component {
             // console.log(imageTensor.print());
             const imgEmbedding = this.model.infer(imageTensor, true);
             const vals = await imgEmbedding.data();
+
+            // TODO: Fix this slice, needs to not be frist 110 features
             const sl = await vals.slice(0, 110);
             const slc = await Array.prototype.slice.call(sl);
-            await console.log(slc);
-            // await console.log(sl.length);
-            // await console.log(imgEmbedding.print());
+            // await console.log(slc);
 
-            const AWSRespone = this.sendToAWS(slc);
-            await console.log(AWSRespone);
+            const AWSRespone = await this.sendToAWS(slc);
+            // await console.log(AWSRespone);
+            // add correct items to cart
+            await this.updateCart(AWSRespone);
 
             const predictions = await this.model.classify(imageTensor);
             this.setState({predictions});
             console.log(predictions);
-
-            // add correct items to cart
 
 
         } catch (error) {
@@ -177,7 +194,10 @@ class ItemScanner extends React.Component {
 
 
         return (
+            // <CameraPage/>
+
             <View style={styles.container}>
+
                 {/*<StatusBar barStyle='light-content'/>*/}
                 <Header style={{backgroundColor: Colors.primary}} headerTitle={"Scan Items"}>
                     <Left>
@@ -192,12 +212,12 @@ class ItemScanner extends React.Component {
                     </View>
                 </View>
                 <View style={{alignItems: 'center'}}>
-
+                    {/*<CameraPage/>*/}
                     <TouchableOpacity
                         style={styles.imageWrapper}
                         // onPress={isModelReady ? this.selectImage : undefined}>
                         onPress={isModelReady ? this.takePhotoAsync : undefined}>
-
+                        {/*<Camera/>*/}
                         {image && <Image source={image} style={styles.imageContainer}/>}
 
                         {isModelReady && !image && (
@@ -215,6 +235,7 @@ class ItemScanner extends React.Component {
                     predictions &&
                     predictions.map(p => this.renderPrediction(p))}
                 </View>
+
             </View>
         )
     }
@@ -222,12 +243,25 @@ class ItemScanner extends React.Component {
 
 
 // adding redux code
+const mapStateToProps = (state) => {
+    return {
+        products: state.products.availableProducts
+
+    }
+};
+
+const mapDispatchToProps = () => {
+    return {
+        addToCart: cartActions.addToCart
+    }
+};
+// end of new redux code
 
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: 'white',
+        // backgroundColor: 'white',
         // alignItems: 'center'
     },
     loadingContainer: {
@@ -273,4 +307,5 @@ const styles = StyleSheet.create({
 
 });
 
-export default ItemScanner;
+// export default ItemScanner;
+export default connect(mapStateToProps, mapDispatchToProps())(ItemScanner)

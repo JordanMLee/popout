@@ -38,7 +38,7 @@ const ProductsNavigator = createStackNavigator({
     navigationOptions: {
         drawerIcon: drawerConfig => (
             <Ionicons
-                name='md-cart'
+                name='md-person'
                 size={23}
                 color={drawerConfig.tintColor}
             />
