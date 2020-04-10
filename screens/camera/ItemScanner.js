@@ -122,7 +122,7 @@ class ItemScanner extends React.Component {
             // console.log(imageTensor.print());
             const imgEmbedding = this.model.infer(imageTensor, true);
             const vals = await imgEmbedding.data();
-
+            console.log(vals);
             // TODO: Fix this slice, needs to not be frist 110 features
             const sl = await vals.slice(0, 110);
             const slc = await Array.prototype.slice.call(sl);
@@ -221,19 +221,19 @@ class ItemScanner extends React.Component {
                         {image && <Image source={image} style={styles.imageContainer}/>}
 
                         {isModelReady && !image && (
-                            <Text style={styles.transparentText}>Tap to take picture</Text>
+                            <Text style={styles.transparentText}>Tap to scan item</Text>
                         )}
                     </TouchableOpacity>
                 </View>
                 <View style={styles.predictionWrapper}>
                     {isModelReady && image && (
                         <Text style={styles.text}>
-                            Predictions: {predictions ? '' : 'Predicting...'}
+                            {/*Predictions: {predictions ? '' : 'Predicting...'}*/}
                         </Text>
                     )}
-                    {isModelReady &&
-                    predictions &&
-                    predictions.map(p => this.renderPrediction(p))}
+                    {/*{isModelReady &&*/}
+                    {/*predictions &&*/}
+                    {/*predictions.map(p => this.renderPrediction(p))}*/}
                 </View>
 
             </View>
