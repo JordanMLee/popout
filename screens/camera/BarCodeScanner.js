@@ -1,11 +1,13 @@
 import React, {useEffect, useState} from 'react';
 import {Button, StyleSheet, Text, View} from 'react-native';
-// import {BarCodeScanner} from 'expo-barcode-scanner';
+import {BarCodeScanner} from 'expo-barcode-scanner';
 import {useDispatch, useSelector} from 'react-redux';
 import * as cartActions from '../../store/actions/cart';
 import {Ionicons} from "@expo/vector-icons";
 import Colors from "../../constants/Colors";
 import {Header, Icon, Left} from "native-base";
+// for older version expo sdk 35
+import * as Permissions from 'expo-permissions';
 
 const Scanner = props => {
 
@@ -16,7 +18,8 @@ const Scanner = props => {
     const products = useSelector(state => state.products.availableProducts);
     useEffect(() => {
         (async () => {
-            const {status} = await BarCodeScanner.requestPermissionsAsync();
+            // const {status} = await BarCodeScanner.requestPermissionsAsync();
+            const {status} = await Permissions.askAsync(Permissions.CAMERA);
             setHasPermission(status === 'granted');
         })();
     }, []);

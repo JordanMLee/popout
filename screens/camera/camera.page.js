@@ -4,12 +4,20 @@ import {Camera} from 'expo-camera';
 import * as Permissions from 'expo-permissions';
 import styles from './styles';
 import Toolbar from './toolbar.component';
+import Gallery from './gallery.component';
 import Colors from "../../constants/Colors";
 import {Ionicons} from "@expo/vector-icons";
+import * as jpeg from "jpeg-js";
+import * as cartActions from "../../store/actions/cart";
+import {connect} from "react-redux";
 
 
-export default class CameraPage extends React.Component {
-    camera = null;
+class CameraPage extends React.Component {
+    constructor(props) {
+        super(props);
+    }
+
+    // camera = null;
 
     state = {
         captures: [],
@@ -17,50 +25,90 @@ export default class CameraPage extends React.Component {
         hasCameraPermission: null,
         cameraType: Camera.Constants.Type.back,
         flashMode: Camera.Constants.FlashMode.off,
+        image: null,
     };
 
     setFlashMode = (flashMode) => this.setState({flashMode});
     setCameraType = (cameraType) => this.setState({cameraType});
-    handleCaptureIn = () => this.setState({capturing: true});
 
-    handleCaptureOut = () => {
-        if (this.state.capturing)
-            this.camera.stopRecording();
-    };
 
-    handleShortCapture = async () => {
-        const photoData = await this.camera.takePictureAsync();
-        this.setState({capturing: false, captures: [photoData, ...this.state.captures]});
+    takePhotoAsync = async () => {
+        // Alert.alert("Photo button bressed","hey");
+        try {
+            let response = await this.camera.takePictureAsync({
+                base64: true
+            });
+            const someCoolData = await this.sendToML(response);
+            // console.log(someCoolData);
+            await this.updateCart(someCoolData);
 
-        // const someCoolData = await this.sendToML(photoData);
-    };
+            this.setState({capturing: false, captures: [response, ...this.state.captures]});
 
-    handleLongCapture = async () => {
-        const videoData = await this.camera.recordAsync();
-        this.setState({capturing: false, captures: [videoData, ...this.state.captures]});
+            if (!response.cancelled) {
+                const source = {uri: response.uri};
+                // console.log(source)
+                this.setState({image: source});
+                // await this.classifyImage(response.uri)
+            }
+        } catch (e) {
+            console.log(e);
+
+        }
+
     };
 
     sendToML = async (image) => {
-        console.log("sending to ml");
+        // console.log("Ths is the image: ", image);
         try {
-            let resp = await fetch('https://2d2cmhl2yb.execute-api.us-east-2.amazonaws.com/test/predictemotions', {
+            let resp = await fetch("http://10.0.0.207:5000/predictb64", {
+
                 method: 'POST',
                 headers: {
                     Accept: 'application/json',
                     'Content-Type': 'application/json'
+
                 },
-                body: JSON.stringify({data: image.base64})
+                body: JSON.stringify({file: image.base64})
+
             });
-
             let response = await resp.json();
-            // await console.log(response);
-            // console.log(response);
+            console.log("The response: ", response);
             return response;
-        } catch (error) {
-            console.log(error)
-        }
-    };
 
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    imageToTensor(rawImageData) {
+        const TO_UINT8ARRAY = true;
+        const {width, height, data} = jpeg.decode(rawImageData, TO_UINT8ARRAY);
+        // Drop the alpha channel info for mobilenet
+        const buffer = new Uint8Array(width * height * 3);
+        let offset = 0; // offset into original data
+        for (let i = 0; i < buffer.length; i += 3) {
+            buffer[i] = data[offset];
+            buffer[i + 1] = data[offset + 1];
+            buffer[i + 2] = data[offset + 2];
+
+            offset += 4;
+        }
+    }
+
+    updateCart = async (data) => {
+        try {
+            // console.log(this.props.products);
+            console.log("This is the data", data);
+            let scannedProduct = await this.props.products.find(prod => prod.title === data.class_name);
+            console.log(scannedProduct);
+            await this.props.addToCart(scannedProduct);
+            await alert(`Added ${scannedProduct.title} to cart`);
+
+        } catch (e) {
+            console.log(e)
+        }
+
+    };
 
     async componentDidMount() {
         const camera = await Permissions.askAsync(Permissions.CAMERA);
@@ -68,6 +116,8 @@ export default class CameraPage extends React.Component {
         const hasCameraPermission = (camera.status === 'granted' && audio.status === 'granted');
 
         this.setState({hasCameraPermission});
+
+
     };
 
     render() {
@@ -91,7 +141,7 @@ export default class CameraPage extends React.Component {
                     />
                 </View>
 
-                {/*{captures.length > 0 && <Gallery captures={captures}/>}*/}
+                {captures.length > 0 && <Gallery captures={captures}/>}
 
                 <Toolbar
                     capturing={capturing}
@@ -99,15 +149,13 @@ export default class CameraPage extends React.Component {
                     cameraType={cameraType}
                     setFlashMode={this.setFlashMode}
                     setCameraType={this.setCameraType}
-                    onCaptureIn={this.handleCaptureIn}
-                    onCaptureOut={this.handleCaptureOut}
-                    onLongCapture={this.handleLongCapture}
-                    onShortCapture={this.handleShortCapture}
+
+                    onTakePhoto={this.takePhotoAsync}
                 />
             </React.Fragment>
         );
     };
-};
+}
 
 CameraPage.navigationOptions = props => {
     const {navigate} = props.navigation;
@@ -127,3 +175,19 @@ CameraPage.navigationOptions = props => {
     }
 
 };
+
+// adding redux code
+const mapStateToProps = (state) => {
+    return {
+        products: state.products.availableProducts
+
+    }
+};
+
+const mapDispatchToProps = () => {
+    return {
+        addToCart: cartActions.addToCart
+    }
+};
+// end of new redux code
+export default connect(mapStateToProps, mapDispatchToProps())(CameraPage)

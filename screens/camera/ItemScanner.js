@@ -119,6 +119,8 @@ class ItemScanner extends React.Component {
             const response = await fetch(imageAssetPath.uri, {}, {isBinary: true});
             const rawImageData = await response.arrayBuffer();
             const imageTensor = this.imageToTensor(rawImageData);
+
+
             // console.log(imageTensor.print());
             const imgEmbedding = this.model.infer(imageTensor, true);
             const vals = await imgEmbedding.data();
@@ -228,7 +230,7 @@ class ItemScanner extends React.Component {
                 <View style={styles.predictionWrapper}>
                     {isModelReady && image && (
                         <Text style={styles.text}>
-                            {/*Predictions: {predictions ? '' : 'Predicting...'}*/}
+                            Predictions: {predictions ? '' : 'Predicting...'}
                         </Text>
                     )}
                     {/*{isModelReady &&*/}

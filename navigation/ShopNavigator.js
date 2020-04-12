@@ -11,7 +11,8 @@ import {Ionicons} from "@expo/vector-icons";
 import React from 'react';
 import {Image, SafeAreaView, ScrollView, View} from 'react-native';
 import TestScreen from "../screens/camera/TestScreen";
-
+import Scanner from "../screens/camera/BarCodeScanner";
+import CameraPage from "../screens/camera/camera.page";
 
 const CustomDrawerComponent = (props) => (
     <SafeAreaView style={{flex: 1}}>
@@ -68,12 +69,12 @@ const OrdersNavigator = createStackNavigator({
 });
 
 const ShopNavigator = createDrawerNavigator({
+    Products_admin: ProductsNavigator,
+    Camera: CameraPage,
     TestScreen: TestScreen,
-    // Scanner: Scanner,
+    Scanner: Scanner,
     Cart: CartScreen,
     Orders: OrdersNavigator,
-    Products_admin: ProductsNavigator,
-    // Camera: CameraPage,
 
 
 }, {

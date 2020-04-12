@@ -14,6 +14,7 @@ export default ({
                     flashMode = CameraFlashModes.off,
                     setFlashMode, setCameraType,
                     onCaptureIn, onCaptureOut, onLongCapture, onShortCapture,
+                    onTakePhoto
                 }) => (
     <Grid style={styles.bottomToolbar}>
         <Row>
@@ -30,10 +31,11 @@ export default ({
             </Col>
             <Col size={2} style={styles.alignCenter}>
                 <TouchableWithoutFeedback
-                    onPressIn={onCaptureIn}
-                    onPressOut={onCaptureOut}
-                    onLongPress={onLongCapture}
-                    onPress={onShortCapture}>
+                    // onPressIn={onCaptureIn}
+                    // onPressOut={onCaptureOut}
+                    // onLongPress={onLongCapture}
+                    // onPress={onShortCapture}>
+                    onPress={onTakePhoto}>
                     <View style={[styles.captureBtn, capturing && styles.captureBtnActive]}>
                         {capturing && <View style={styles.captureBtnInternal}/>}
                     </View>
