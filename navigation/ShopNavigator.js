@@ -13,6 +13,7 @@ import {Image, SafeAreaView, ScrollView, View} from 'react-native';
 import TestScreen from "../screens/camera/TestScreen";
 import Scanner from "../screens/camera/BarCodeScanner";
 import CameraPage from "../screens/camera/camera.page";
+import AuthScreen from "../screens/user/AuthScreen";
 
 const CustomDrawerComponent = (props) => (
     <SafeAreaView style={{flex: 1}}>
@@ -75,6 +76,7 @@ const ShopNavigator = createDrawerNavigator({
     Scanner: Scanner,
     Cart: CartScreen,
     Orders: OrdersNavigator,
+    Auth: AuthScreen,
 
 
 }, {
