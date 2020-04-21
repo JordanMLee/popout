@@ -14,6 +14,7 @@ import TestScreen from "../screens/camera/TestScreen";
 import Scanner from "../screens/camera/BarCodeScanner";
 import CameraPage from "../screens/camera/camera.page";
 import AuthScreen from "../screens/user/AuthScreen";
+import PaymentsScreen from "../screens/user/PaymentsScreen";
 
 const CustomDrawerComponent = (props) => (
     <SafeAreaView style={{flex: 1}}>
@@ -77,6 +78,7 @@ const ShopNavigator = createDrawerNavigator({
     Cart: CartScreen,
     Orders: OrdersNavigator,
     Auth: AuthScreen,
+    Pay: PaymentsScreen,
 
 
 }, {
