@@ -71,13 +71,14 @@ const OrdersNavigator = createStackNavigator({
 });
 
 const ShopNavigator = createDrawerNavigator({
-    Products_admin: ProductsNavigator,
+    Auth: AuthScreen,
+    Products: ProductsNavigator,
     Camera: CameraPage,
     TestScreen: TestScreen,
     Scanner: Scanner,
     Cart: CartScreen,
     Orders: OrdersNavigator,
-    Auth: AuthScreen,
+    // Auth: AuthScreen,
     Pay: PaymentsScreen,
 
 

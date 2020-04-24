@@ -1,9 +1,10 @@
 import React from 'react';
-import {Button, KeyboardAvoidingView, ScrollView, StyleSheet, View} from 'react-native';
+import {Button, KeyboardAvoidingView, ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native';
 import Card from '../../components/UI/Card';
 import Input from '../../components/UI/Input';
 import Colors from "../../constants/Colors";
 import {LinearGradient} from 'expo-linear-gradient'
+import {Ionicons} from "@expo/vector-icons";
 
 const AuthScreen = props => {
     return (
@@ -13,6 +14,11 @@ const AuthScreen = props => {
             style={styles.screen}
         >
             <LinearGradient colors={[Colors.primary, Colors.accent]} style={styles.gradient}>
+                <TouchableOpacity>
+                    <View style={styles.headerWrap}>
+                        <Ionicons name='md-contact' size={70} color='white'></Ionicons>
+                    </View>
+                </TouchableOpacity>
                 <Card style={styles.authContainer}>
                     <ScrollView>
                         <Input
@@ -43,6 +49,7 @@ const AuthScreen = props => {
                         <View style={styles.buttonContainer}>
                             <Button title="Login" color={Colors.primary}
                                     onPress={() => {
+                                        props.navigation.navigate('Products')
                                     }}/></View>
                         <View style={styles.buttonContainer}>
                             <Button title="Switch to Sign Up" color={Colors.accent}
@@ -55,8 +62,17 @@ const AuthScreen = props => {
     );
 }
 
-AuthScreen.navigationOptions = {
-    headerTitle: 'Authenticate'
+AuthScreen.navigationOptions = props => {
+    return {
+        headerTitle: 'Authenticate',
+        drawerIcon: drawerConfig => (
+            <Ionicons
+                name='md-lock'
+                size={23}
+                color={drawerConfig.tintColor}
+            />
+        ),
+    }
 }
 
 const styles = StyleSheet.create({
@@ -77,6 +93,18 @@ const styles = StyleSheet.create({
     },
     buttonContainer: {
         marginTop: 10,
+    },
+    newprofilepic: {
+
+        // alignSelf: 'stretch',
+        width: 70,
+        borderRadius: 30,
+        margin: 10,
+
+    },
+    headerWrap: {
+        alignItems: 'center',
+        margin: 40
     }
 });
 export default AuthScreen;

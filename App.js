@@ -14,7 +14,7 @@ import ReduxThunk from 'redux-thunk';
 
 // ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT_UP);
 StatusBar.setHidden(true);
-
+console.disableYellowBox = true;
 const rootReducer = combineReducers({
     products: productsReducer,
     cart: cartReducer,

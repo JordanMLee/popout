@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button, FlatList, StyleSheet, Text, View} from 'react-native';
+import {Alert, Button, FlatList, StyleSheet, Text, View} from 'react-native';
 import {useDispatch, useSelector} from "react-redux";
 import Colors from "../../constants/Colors";
 import CartItem from "../../components/shop/CartItem";
@@ -32,7 +32,20 @@ const CartScreen = props => {
                 <Text style={styles.summaryText}>
                     Total: <Text style={styles.amount}>${cartTotalAmount.toFixed(2)}</Text></Text>
                 <Button title="Checkout" disabled={cartItems.length === 0} onPress={() => {
-                    dispatch(ordersActions.addOrder(cartItems, cartTotalAmount))
+                    dispatch(ordersActions.addOrder(cartItems, cartTotalAmount));
+                    const buttons = [
+                        {
+                            text: 'Venmo', onPress: () => {
+                                props.navigation.navigate('Pay')
+                            }
+                        },
+                        {
+                            text: 'Apple Pay', onPress: () => {
+                            }
+                        },
+                        {text: 'Cancel', type: 'cancel'}
+                    ];
+                    Alert.alert('Confirm payment?', `Your total is: ${cartTotalAmount.toFixed(2)}`, buttons);
                 }}/>
             </View>
             <View>

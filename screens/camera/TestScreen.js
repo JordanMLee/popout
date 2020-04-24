@@ -1,54 +1,46 @@
 import React from 'react';
-import {StyleSheet} from "react-native";
-import ItemScanner from "./ItemScanner"
+import {Button, Image, Text, View} from "react-native";
 import Colors from "../../constants/Colors";
 import {Ionicons} from "@expo/vector-icons";
+import {Header, Icon, Left} from "native-base";
+import Input from "../../components/UI/Input";
 
 const TestScreen = props => {
-    return <ItemScanner/>;
-    // console.log(testArr);
-    //
-    // const sendToAWS = async () => {
-    //     console.log("sending to AWS");
-    //     try {
-    //         let request = await fetch('https://bd83fcrp0d.execute-api.us-east-2.amazonaws.com/production/predictcafeunit', {
-    //             method: 'POST',
-    //             headers: {
-    //                 Accept: 'application/json',
-    //                 'Content-Type': 'application/json'
-    //             },
-    //             body: JSON.stringify({data: testArr["data"]})
-    //         });
-    //
-    //         let response = await request.json(); // sends to aws successfully
-    //         // Alert.alert(response.body);
-    //         console.log(response.body);
-    //         return response
-    //     } catch (e) {
-    //         console.log(e)
-    //     }
-    // };
+    return (
+        <View>
+            <Header style={{backgroundColor: Colors.primary}} headerTitle={"Scan Items"}>
+                <Left>
+                    <Icon iconSize={23} color={Colors.accent} name="md-menu" onPress={() => {
+                        // this.props.navigation.openDrawer()
+                    }}/>
+                </Left>
+            </Header>
+            <View style={{justifyContent: 'center', alignItems: 'center', backgroundColor: Colors.primary}}>
+                <Text style={{color: 'white'}}>Welcome to Summer Music Festival 2020!!</Text>
 
-    // const val = sendToAWS();
-    // alert(val);
+            </View>
+            <View style={{justifyContent: 'center', alignItems: 'center'}}>
 
+                <Image style={{width: '100%'}} source={require('../../assets/unnamed.jpg')}/>
+            </View>
 
-    // return (
-    //     <View style={styles.test}>
-    //         <Text>Test Screen</Text>
-    //         <Button title={"Send To AWS"} onPress={sendToAWS}/>
-    //     </View>
-    // )
+            <View>
+                <Input/>
+                <Button title="Search Vendors" color={Colors.primary}/>
+            </View>
+            <View style={{justifyContent: 'center', alignItems: 'center'}}>
+                <Text style={{color: Colors.accent}}>Sponsored Vendors</Text>
+                <Image style={{width: 400, height: 100}} source={require('../../assets/truck.png')}/>
+
+            </View>
+
+        </View>
+    );
+
+    // return <ItemScanner/>;
 
 };
 
-const styles = StyleSheet.create({
-    test: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center'
-    }
-});
 
 TestScreen.navigationOptions = props => {
     const {navigate} = props.navigation;
